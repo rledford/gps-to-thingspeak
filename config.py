@@ -1,4 +1,5 @@
 """provide functions to load, save, and configure runtime parameters"""
+import keys
 import os
 
 DEFAULT_CONFIG = {
@@ -12,9 +13,7 @@ DEFAULT_CONFIG = {
 HOME = os.path.expanduser("~")
 CFG_FILE = os.path.join(HOME, "s2ts.cfg")
 
-API_KEY = ""
-env = open('.env', 'r')
-API_KEY = env.readline().split("=")[-1].strip("\n")
+API_KEY = keys.THINGSPEAK_API_KEY
 
 def save_config(cfg):
     """save cfg to file"""
