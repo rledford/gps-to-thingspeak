@@ -13,7 +13,30 @@
 </div>
 <br>
 <div>
+    It is expected that you add a file named <code>keys.py</code> which contains a <code>string</code> type variable named <code>THINGSPEAK_API_KEY</code>.
+    <br>
+    <div>
+        <small>Inside keys.py</small>
+    </div>
+    <div>
+        <code>THINGSPEAK_API_KEY=<q>your-api-key</q></code>
+    </div>
+</div>
+<br>
+<div>
     While the application is running press <code>Ctrl-C</code> to stop the run process and show the main menu.
+</div>
+<div>
+    <h5>PyInstaller</h5>
+    <div>
+        Build executables with pyInstaller by using the following command <code>pyinstaller -F main.py -n name-of-executable-file</code>
+    </div>
+    <div>
+        If building for Python 2.x, add the following to the pyinstaller command line options <code>--hidden-import=Queue</code>
+    </div>
+    <div>
+        If building for python 3.x, add the following to the pyinstaller command line options <code>--hidden-import=queue</code>
+    </div>
 </div>
 <div>
     <h5>Dependencies</h5>
