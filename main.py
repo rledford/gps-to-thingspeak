@@ -33,7 +33,7 @@ def configure():
     config.set_port(cfg)
     config.set_baud(cfg)
     config.set_update_rate(cfg)
-    config.set_channel(cfg)
+    #config.set_channel(cfg)
     config.set_write_key(cfg)
     config.save_config(cfg)
 
