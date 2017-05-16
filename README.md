@@ -13,17 +13,6 @@
 </div>
 <br>
 <div>
-    It is expected that you add a file named <code>keys.py</code> which contains a <code>string</code> type variable named <code>THINGSPEAK_API_KEY</code>.
-    <br>
-    <div>
-        <small>Inside keys.py</small>
-    </div>
-    <div>
-        <code>THINGSPEAK_API_KEY=<q>your-api-key</q></code>
-    </div>
-</div>
-<br>
-<div>
     While the application is running press <code>Ctrl-C</code> to stop the run process and show the main menu.
 </div>
 <div>
