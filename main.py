@@ -8,22 +8,25 @@ import serial
 
 API_URL = "https://api.thingspeak.com/update.json?api_key={write_key}&field1={lat}&field2={lon}&field3={time}"
 READ_TIMEOUT = 2#seconds
+DELAY_TIME = 3#seconds
 
 def update_thingspeak(cfg, lat, lon):
     """updates thingspeak channel with lat lon"""
+    print("\nupdating ThingSpeak...")
     url = API_URL.replace("{write_key}", cfg["write_key"]).replace("{lat}", str(lat)).replace("{lon}", str(lon))
     success = False
     try:
         req = requests.get(url)
         if req.status_code == 200:
-            print("updated ThingSpeak")
+            print("SUCCESS")
             success = True
         elif req.status_code == 404:
-            print("unable to update ThingSpeak - please verify channel and/or write key")
+            print("ERROR: unable to update ThingSpeak - please verify write key")
         else:
             print(req.content)
     except requests.exceptions.ConnectionError:
         print("ERROR: check internet connection")
+    print()
     return success
 
 def configure():
@@ -36,12 +39,23 @@ def configure():
     config.set_write_key(cfg)
     config.save_config(cfg)
 
+def delay():
+    """delays any following functions by the DELAY_TIME amount"""
+    print("please wait...")
+    last_time = time.time()
+    while True:
+        if time.time() - last_time >= DELAY_TIME:
+            print()
+            return
+
 def run():
     """opens the serial port, reads and parses data, updates ThingSpeak"""
-    print("***** RUN *****")
+    print("\n***** RUN *****")
+    print("press Ctrl-C to show menu")
+    delay()
     cfg = config.load_config()
     last_update = time.time()
-    update_rate_seconds = 5#int(cfg["update_rate"])*60
+    update_rate_seconds = int(cfg["update_rate"])*60
     ser = serial.Serial()
     ser.port = cfg["port"]
     ser.baudrate = cfg["baud"]
@@ -52,7 +66,7 @@ def run():
     except:
         print("ERROR: unable to open serial port")
         raise KeyboardInterrupt#raise to go to menu instead of exiting
-
+    print()
     while True:
         try:
             data = ser.readline()
@@ -61,14 +75,13 @@ def run():
                 gps_string = data.decode("utf-8")
                 print(gps_string.strip("\n"))
                 if time_delta > update_rate_seconds:
-                    print("updating ThingSpeak")
                     lat, lng = gps.extract_lat_lng(gps_string)
                     if lat and lng:
                         updated = update_thingspeak(cfg, lat, lng)
                         if updated:
                             last_update = time.time()
                         else:
-                            print("failed to update ThingSpeak - trying again in 10 seconds")
+                            print("failed to update ThingSpeak - trying again in 10 seconds\n")
                             #set last_update so that an update will be attempted in 10 seconds
                             last_update = time.time() - update_rate_seconds + 10
             else:
