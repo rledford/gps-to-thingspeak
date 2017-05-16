@@ -1,27 +1,28 @@
 """starts the main program loop"""
 import sys
+import time
 import config
 import gps
 import requests
 import serial
-import time
 
-API_URL = "https://api.thingspeak.com/channels/{channel}.json?api_key=%s&field1={lat}&field2={lon}"%config.API_KEY
-READ_TIMEOUT = 3#seconds
+API_URL = "https://api.thingspeak.com/update.json?api_key={write_key}&field1={lat}&field2={lon}&field3={time}"
+READ_TIMEOUT = 2#seconds
 
 def update_thingspeak(cfg, lat, lon):
     """updates thingspeak channel with lat lon"""
-    url = API_URL.replace("{channel}", cfg["channel"]).replace("{lat}", str(lat)).replace("{lon}", str(lon))
+    url = API_URL.replace("{write_key}", cfg["write_key"]).replace("{lat}", str(lat)).replace("{lon}", str(lon))
     success = False
+    print(url)
     try:
-        r = requests.put(url)
-        if r.status_code == 200:
+        req = requests.get(url)
+        if req.status_code == 200:
             print("updated ThingSpeak")
             success = True
-        elif r.status_code == 404:
+        elif req.status_code == 404:
             print("unable to update ThingSpeak - please verify channel and/or write key")
         else:
-            print(r.content)
+            print(req.content)
     except requests.exceptions.ConnectionError:
         print("ERROR: check internet connection")
     return success
@@ -41,15 +42,14 @@ def run():
     print("***** RUN *****")
     cfg = config.load_config()
     last_update = time.time()
-    update_rate_seconds = int(cfg["update_rate"])*60
+    update_rate_seconds = 5#int(cfg["update_rate"])*60
     ser = serial.Serial()
     ser.port = cfg["port"]
     ser.baudrate = cfg["baud"]
     ser.timeout = READ_TIMEOUT
     try:
-        print("opening serial port")
+        print("opening serial port: %s"%cfg["port"])
         ser.open()
-        print("serial port open")
     except:
         print("ERROR: unable to open serial port")
         raise KeyboardInterrupt#raise to go to menu instead of exiting
@@ -57,11 +57,11 @@ def run():
     while True:
         try:
             data = ser.readline()
-            dt = time.time() - last_update
+            time_delta = time.time() - last_update
             if data:
                 gps_string = data.decode("utf-8")
                 print(gps_string.strip("\n"))
-                if dt > update_rate_seconds:
+                if time_delta > update_rate_seconds:
                     print("updating ThingSpeak")
                     lat, lng = gps.extract_lat_lng(gps_string)
                     if lat and lng:
@@ -76,7 +76,7 @@ def run():
                 print("input timeout")
         except KeyboardInterrupt:
             if ser.is_open:
-                print("\nclosing serial port")
+                print("\nclosing serial port: %s"%cfg["port"])
                 ser.close()
             #bubble the exception out of the run() function to for menu to be shown
             raise KeyboardInterrupt
