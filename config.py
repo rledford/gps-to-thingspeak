@@ -44,13 +44,13 @@ def load_config():
 def set_port(cfg):
     """prompts user to select/type a serial port name/path and returns the chosen port name"""
     current = cfg["port"]
-    print("***** PORT *****")
+    print("***** SET SERIAL PORT *****")
     print("for Windows - type COM# where # is a number (1 to 256) - no spaces between COM and #")
     print("for Linux/MacOS - type the path to the device")
     print("leave blank to use current: %s"%current)
     port = None
     while not port:
-        port = input("PORT: ")
+        port = input("SERIAL PORT: ")
         if (port == ""):
             print("using current: %s"%current)
             return
@@ -59,11 +59,11 @@ def set_port(cfg):
 def set_baud(cfg):
     """prompts user to input a baud rate and returns the baud chosen"""
     current = cfg["baud"]
-    print("***** BAUD *****")
+    print("***** SET BAUD RATE *****")
     print("leave blank to use current: %s"%current)
     baud = None
     while not baud:
-        baud = input("BAUD: ")
+        baud = input("BAUD RATE: ")
         if baud == "":
             print("using current: %s"%current)
             return
@@ -77,7 +77,7 @@ def set_baud(cfg):
 def set_channel(cfg):
     """prompts user for a ThingSpeak channel id"""
     current = cfg["channel"]
-    print("***** THINGSPEAK CHANNEL *****")
+    print("***** SET THINGSPEAK CHANNEL *****")
     print("leave blank to use current: %s"%current)
     channel = None
     while not channel:
@@ -90,11 +90,11 @@ def set_channel(cfg):
 def set_write_key(cfg):
     """prompts user for a ThingSpeak write key"""
     current = cfg["write_key"]
-    print("***** THINGSPEAK WRITE KEY *****")
+    print("***** SET THINGSPEAK WRITE KEY *****")
     print("leave blank to use current: %s"%current)
     write_key = None
     while not write_key:
-        write_key = input("KEY: ")
+        write_key = input("WRITE KEY: ")
         if write_key == "":
             print("using current: %s"%current)
             return
@@ -103,12 +103,12 @@ def set_write_key(cfg):
 def set_update_rate(cfg):
     """prompts user to provide an integer value for update rate in minutes"""
     current = cfg["update_rate"]
-    print("***** RATE *****")
+    print("***** SET UPDATE RATE *****")
     print("update rate in minutes - must be an integer (3 to 10)")
     print("leave blank to use current: %s"%current)
     rate = None
     while not rate:
-        rate = input("RATE: ")
+        rate = input("UPDATE RATE: ")
         if rate == "":
             print("using current: %s"%current)
             return
