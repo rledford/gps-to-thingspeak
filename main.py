@@ -13,7 +13,6 @@ def update_thingspeak(cfg, lat, lon):
     """updates thingspeak channel with lat lon"""
     url = API_URL.replace("{write_key}", cfg["write_key"]).replace("{lat}", str(lat)).replace("{lon}", str(lon))
     success = False
-    print(url)
     try:
         req = requests.get(url)
         if req.status_code == 200:
