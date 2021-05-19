@@ -6,7 +6,7 @@ import gps
 import requests
 import serial
 
-API_URL = "https://api.thingspeak.com/update.json?api_key={write_key}&field1={lat}&field2={lon}&field3={time}"
+API_URL = "https://api.thingspeak.com/update.json?api_key={write_key}&latitude={lat}&longitude={lon}"
 READ_TIMEOUT = 2#seconds
 DELAY_TIME = 3#seconds
 
